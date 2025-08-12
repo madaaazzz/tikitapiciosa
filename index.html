@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Lluvia de Mensajes</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: black;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    .floating-text {
+      position: absolute;
+      color: #ff3366;
+      font-size: 22px;
+      font-weight: bold;
+      pointer-events: none;
+      animation: floatUp 1.5s ease-out forwards;
+      text-shadow: 0 0 5px white;
+    }
+
+    @keyframes floatUp {
+      0% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-80px) scale(1.5);
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+
+    // 🔹 Lista de palabras
+    const phrases = [
+      "TE AMO",
+      "Mi niña",
+      "Princesa",
+      "Chito",
+      "Tikita",
+      "Preciosa",
+      "Linda",
+      "Fantástica",
+      "Inteligente",
+      "Mi reina",
+      "Bonita",
+      "Mi amor",
+      "Diosa"
+    ];
+
+    const fontSize = 22;
+    let speed = 0.09
+
+    function draw() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+      ctx.fillRect(0, 0, width, height);
+
+      const gradient = ctx.createLinearGradient(0, 0, width, height);
+      gradient.addColorStop(0, "#ff4d6d");
+      gradient.addColorStop(0.5, "#ff99aa");
+      gradient.addColorStop(1, "#ff1a66");
+
+      ctx.fillStyle = gradient;
+      ctx.font = fontSize + "px 'Segoe UI', Arial";
+
+      // Dibujar varias palabras en posiciones aleatorias
+      for (let i = 0; i < 15; i++) {
+        const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+        const x = Math.random() * width;
+        const y = Math.random() * height;
+        ctx.fillText(phrase, x, y);
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    draw();
+
+    window.addEventListener('resize', () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    });
+
+    // Texto flotante al hacer clic
+    document.addEventListener('click', (e) => {
+      const text = document.createElement('div');
+      text.className = 'floating-text';
+      text.innerText = phrases[Math.floor(Math.random() * phrases.length)];
+      text.style.left = e.clientX + 'px';
+      text.style.top = e.clientY + 'px';
+      document.body.appendChild(text);
+
+      setTimeout(() => {
+        text.remove();
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
